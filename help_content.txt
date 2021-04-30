@@ -1,0 +1,12 @@
+##################################
+
+A bot that can manage your password and save it in a save place.
+
+------------------------------------------------------------
+
+Commands - 
+#addpass - to add a new password to your savings.
+#deleatpass - deleat the password that you choose.
+#delete_all - deleat all the password that you store.
+
+##################################
