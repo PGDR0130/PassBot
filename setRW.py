@@ -23,8 +23,9 @@ def check(id:int):
 
 
 
-class setrw:
-    #find the specific user by id and return the oprion
+#class for modifying the settings.json file settings
+class setting_data:
+    #find the specific user by id and return the option 
     def find(id:int, option:str):
         data = read_json()
         if option == 'all':
@@ -37,6 +38,7 @@ class setrw:
                     result = i[option]
         return result 
 
+
     #refresh to the new data 
     def replace(id:int, option:str, content):
         data = read_json()
@@ -45,4 +47,13 @@ class setrw:
                 i[option] = content
         data = json.dump(data, indent=2)
         write_json(data)
-        return 'done'
+        return 'Done'
+
+
+
+
+#class for modifying the in_session.json file 
+class in_session_data:
+
+    def find(id:int):
+        pass
