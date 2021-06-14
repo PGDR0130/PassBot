@@ -1,8 +1,8 @@
 {
-        "defult" : 
-        {
-            "user_id" : "",
-            "user_name" : "",
-            "defult_len" : ""
-        }
+    "defult" : 
+    {
+        "user_id" : "",
+        "defult_len" : "30",
+        "delete_time" : "10"
+    }
 }

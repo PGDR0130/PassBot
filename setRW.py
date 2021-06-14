@@ -1,24 +1,28 @@
 import json
 
-@staticmethod
-def read_json():
-    data = json.load('settings.json', 'r')
-    return data
 
-@staticmethod
+def read_json():
+    with open('settings.json') as f:
+        return json.load(f)
+
+
 def write_json(data):
     with open('settings.json', 'w') as f:
         f.write(data)
 
-def check(id:int):
+def check(id:str):
     data = read_json()
     for i in data['setting']:
         if i['user_id'] == id:
-            return True 
-    for i in data['setting']:
-        pass
+            return 
 
-
+    with open('defult.json') as f :
+        defult = json.load(f)
+    
+    defult['defult']['user_id'] = id
+    data['setting'].append(defult['defult'])
+    write_json(json.dumps(data, indent=2))
+    return 
 
 
 
@@ -27,6 +31,8 @@ def check(id:int):
 class setting_data:
     #find the specific user by id and return the option 
     def find(id:int, option:str):
+        id = str(id)
+        check(id)
         data = read_json()
         if option == 'all':
             for i in data['setting']:
@@ -40,20 +46,19 @@ class setting_data:
 
 
     #refresh to the new data 
-    def replace(id:int, option:str, content):
+    def replace(id:int, option:str, content:str):#content 是字串比較方便，這樣就不用辨識後再存取。
+        if option == 'user_id':
+            return 'Error : cant change user_id, Its from Discord'
+        if option == 'delete_time' and not content.isnumeric():#check if string is number not containing(- and .)
+            return 'Error : please enter numbers only'
+        id = str(id)
+        check(id)
         data = read_json()
+        if option not in data['setting'][0]:  #return if the option isnt in the setitng.json settings
+            return f'Error : Cant find [ \'{option}\' ] in setting'
         for i in data['setting']:
             if i['user_id'] == id:
                 i[option] = content
-        data = json.dump(data, indent=2)
+        data = json.dumps(data, indent=2)
         write_json(data)
         return 'Done'
-
-
-
-
-#class for modifying the in_session.json file 
-class in_session_data:
-
-    def find(id:int):
-        pass
