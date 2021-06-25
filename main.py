@@ -4,6 +4,7 @@ from keep_alive import keep_alive  #import the web server script
 import edcode
 import sql_handler as sqlh
 import asyncio
+import os
 
 client = discord.Client()
 line = '-'*50
@@ -61,17 +62,17 @@ async def on_message(message):
         await channel.send(line)
         in_event.append(author)
 
-        a = await channel.send("Please enter the name or the url of the site")
+        a = await channel.send("網站名子")#Please enter the name or the url of the site
         site_url = await client.wait_for('message', check=_check)
         await site_url.delete()
         await add_reactions(a, "✅")
 
-        b = await channel.send("Please enter the password that you want to store ")
+        b = await channel.send("請輸入要儲存的密碼")#Please enter the password that you want to store
         site_pass = await client.wait_for('message', check=_check)
         await site_pass.delete()
         await add_reactions(b, "✅")
             
-        c = await channel.send("Please enter the password for the encryption ")
+        c = await channel.send("請輸入加密密碼 ")
         master_pass = await client.wait_for('message', check=_check)
         await master_pass.delete()
         await add_reactions(c, "✅")
@@ -93,12 +94,12 @@ async def on_message(message):
     elif message.content.startswith("#findpass"):
         in_event.append(author)
 
-        a = await channel.send("Plesae enter the site or url that you want to find.")
+        a = await channel.send("請輸入要找的網址名子")
         site_url = await client.wait_for('message', check=_check)
         await site_url.delete()
         await add_reactions(a, "✅")
 
-        b = await channel.send("Please enter the password for the decryption")
+        b = await channel.send("請輸入密碼")
         master_pass = await client.wait_for('message', check=_check)
         await master_pass.delete()
         await add_reactions(b, "✅")
@@ -126,7 +127,7 @@ async def on_message(message):
 
 
 
-
+    
     elif message.content.startswith('#listSettings'):
         await channel.send(setting_data.find(author, 'all'))
 
