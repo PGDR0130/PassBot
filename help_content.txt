@@ -1,12 +1,23 @@
 ##################################
 
+一個可以加密並儲存密碼的機器人。
 A bot that can manage your password and save it in a save place.
 
 ------------------------------------------------------------
 
-Commands - 
-#addpass - to add a new password to your savings.
-#deleatpass - deleat the password that you choose.
-#delete_all - deleat all the password that you store.
+Commands :
+
+-密碼--------------------
+#addpass - 加入新的密碼
+#findpass - 取出密碼
+#deleatpass - 刪除密碼
+#passlist - 列出所有
+
+-設定--------------------
+#listSettings - 列出所有設定
+#settingChange - 更改設定
+
+如有任何錯誤或要取消當前階段
+--> #end_session
 
 ##################################

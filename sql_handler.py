@@ -43,8 +43,16 @@ def delete_pass(user_id: int, site: str):
 def read_pass(user_id: int, site: str):
     user_id = f"id{str(user_id)}"
     with conn:
-        c.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{user_id}'")
-        if c.fetchone() == None:
-            return 'Error : You dont have any pass stored.'
-        c.execute(f"SELECT * FROM {user_id} WHERE site_name='{site}'")
-        return c.fetchone()[1]
+        if site == "all":
+            c.execute(f"SELECT site_name FROM {user_id}")
+            all = c.fetchall()
+            sites = []
+            for i in all:
+                sites.append(i[0])
+            return sites
+        else:
+            c.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
+            if c.fetchone() == None:
+                return 'Error : You dont have any pass stored.'
+            c.execute(f"SELECT * FROM {user_id} WHERE site_name='{site}'")
+            return c.fetchone()[1]
