@@ -1,5 +1,7 @@
-#一個可以儲存密碼的Discord bot --> Passbot
-#109-2 自主學習
+##一個可以儲存密碼的Discord bot --> Passbot
+##109-2 高一下 自主學習
+##竹北高中 11311 張哲誠
+##2021/8/25 最後檢查上傳 
 
 import discord
 #Json 讀取寫入
@@ -36,8 +38,6 @@ def end_session(m, mode): #mode0-user_end, mode1-Error_end
         return "Ended"
 
     
-
-
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
@@ -128,7 +128,7 @@ async def on_message(message):
             await channel.send(result)
             await channel.send(line)
 
-                
+              
             in_event.pop(in_event.index(author))
 
 
@@ -166,14 +166,11 @@ async def on_message(message):
                 return 
             decoded_pass = edcode.decode(int(master_pass.content), encode)
 
-
-            
             send_pass = await channel.send(str(decoded_pass)) 
-            await asyncio.sleep(int(setting_data.find(author, 'delete_time'))) #wait for _ seconds and than delete
+            #asynco sleep 這樣就可以把資源交出 而且不會妨礙到其他程式繼續執行
+            await asyncio.sleep(int(setting_data.find(author, 'delete_time')))
             await send_pass.delete() 
             in_event.pop(in_event.index(author))    
-
-
 
 
         elif message.content.startswith('#deletepass'):
@@ -185,11 +182,8 @@ async def on_message(message):
             in_event.pop(in_event.index(author))
 
 
-
-        
         elif message.content.startswith('#listSettings'):
             await channel.send(setting_data.find(author, 'all'))
-
 
 
         elif message.content.startswith('#settingChange'):
@@ -205,10 +199,9 @@ async def on_message(message):
         else:
             pass
 
-
+    #RuntimeError 避免結束階段的錯誤
     except RuntimeError:
         print('session_end')
-    # Excepted Error,for canceling the pending message
     except Exception as e:
         if author in in_event:
             in_event.pop(in_event.index(author))
@@ -219,8 +212,7 @@ async def on_message(message):
 
 
 
-
-
-#keep_alive() must be in front of the client.run(), otherwise it won't run.
+#keep_alive()一定要在client.run()的前面不然不會被執行到
+#啟動網站和啟動Discord API
 keep_alive()
 client.run(os.getenv('TOKEN'))

@@ -1,6 +1,6 @@
 #source from https://gist.github.com/beaucarnes/51ec37412ab181a2e3fd320ee474b671
-#用uptime robot ping 這個網站這伺服器就不會關掉  
-
+#By Beau Carnes
+#用uptime robot ping 這個網站這伺服器就不會關掉 https://passbot.pgdr.repl.co
 from flask import Flask
 from threading import Thread
 

@@ -17,7 +17,7 @@ Commands :
 #listSettings - 列出所有設定
 #settingChange - 更改設定
 
-如有任何錯誤或要取消當前階段
+如有任何錯誤或要取消當前階段(addpass, findpass)
 --> #end_session
 
 ##################################

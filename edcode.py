@@ -18,7 +18,6 @@ def flush(a,b):
     for k in range(len(add)):
         supply.append(add[k])
 
-
 def encode(master_key:int, password:int):
     if master_key == 1 : return
     global supply 
@@ -37,8 +36,6 @@ def encode(master_key:int, password:int):
         rest_encode = str(supply.index(i))
         encoded += str(len(rest_encode))+rest_encode
     return encoded
-
-
 
 def decode(master_key:int, encoded:str):
     global supply

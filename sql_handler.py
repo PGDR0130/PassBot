@@ -1,5 +1,4 @@
-#sql read and write
-
+#讀寫Database 裡的加密密碼資料
 import sqlite3
 
 conn = sqlite3.connect('P_data.db')

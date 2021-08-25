@@ -1,4 +1,4 @@
-#Write and Read Json files
+#讀寫JSON的使用這設定
 import json
 
 def read_json():
@@ -23,8 +23,6 @@ def check(id:str):
     data['setting'].append(defult['defult'])
     write_json(json.dumps(data, indent=2))
     return 
-
-
 
 
 #class for modifying the settings.json file settings
