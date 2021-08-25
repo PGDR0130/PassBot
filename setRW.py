@@ -1,5 +1,5 @@
+#Write and Read Json files
 import json
-
 
 def read_json():
     with open('settings.json') as f:
@@ -29,7 +29,7 @@ def check(id:str):
 
 #class for modifying the settings.json file settings
 class setting_data:
-    #find the specific user by id and return the option 
+    #find the specific setting by user_id and return the option 
     def find(id:int, option:str):
         id = str(id)
         check(id)
@@ -49,12 +49,14 @@ class setting_data:
     def replace(id:int, option:str, content:str):#content 是字串比較方便，這樣就不用辨識後再存取。
         if option == 'user_id':
             return 'Error : cant change user_id, Its from Discord'
-        if option == 'delete_time' and not content.isnumeric():#check if string is number not containing(- and .)
+        #check if string is number not containing(- and .)
+        if option == 'delete_time' and not content.isnumeric():
             return 'Error : please enter numbers only'
         id = str(id)
         check(id)
         data = read_json()
-        if option not in data['setting'][0]:  #return if the option isnt in the setitng.json settings
+        #return if the option isnt in the setitng.json settings
+        if option not in data['setting'][0]:
             return f'Error : Cant find [ \'{option}\' ] in setting'
         for i in data['setting']:
             if i['user_id'] == id:

@@ -1,3 +1,4 @@
+# 加密器
 def supply_reset():
     global supply
     with open('supply.txt',"r") as f :
@@ -10,9 +11,7 @@ def flush(a,b):
     global supply
     a, b = int(a), int(b)
     if a>b:
-        old_b = b
-        b = a
-        a = old_b 
+        a, b = b, a
     b = b*(3)
     add = supply[a:b]
     del supply[a:b]
@@ -21,6 +20,7 @@ def flush(a,b):
 
 
 def encode(master_key:int, password:int):
+    if master_key == 1 : return
     global supply 
     supply_reset()
     mul = 0    
@@ -45,7 +45,7 @@ def decode(master_key:int, encoded:str):
     supply_reset()
     password = ''
     count, master_count = 0, 0
-    mul_number = int(encoded[count])#[0,1,2,3] if(1)so(1), if(2)so(2) 
+    mul_number = int(encoded[count])
     count = mul_number
     master_mul = int(''.join(encoded[1:mul_number+1]))
     master_key = list(str(int(master_key)**master_mul))          

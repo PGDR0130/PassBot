@@ -10,7 +10,7 @@ Commands :
 -密碼--------------------
 #addpass - 加入新的密碼
 #findpass - 取出密碼
-#deleatpass - 刪除密碼
+#deletepass - 刪除密碼
 #passlist - 列出所有
 
 -設定--------------------

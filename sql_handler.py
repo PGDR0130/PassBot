@@ -1,3 +1,5 @@
+#sql read and write
+
 import sqlite3
 
 conn = sqlite3.connect('P_data.db')
@@ -20,9 +22,9 @@ def write_pass(user_id: int, site: str, _pass: int):
         )
         if c.fetchone() == None: create_table(user_id)
         c.execute(f"SELECT * From {user_id} WHERE site_name='{site}'")
-        if c.fetchone() != None: return 'Error : Site name already exist'
+        if c.fetchone() != None: return 'Error : 網站名稱已存在'
         c.execute(f"INSERT INTO {user_id} VALUES ('{site}', '{str(_pass)}')")
-        return 'Done encrypting and storing data.'
+        return '完成加密並儲存資料'
 
 
 def delete_pass(user_id: int, site: str):
@@ -34,10 +36,10 @@ def delete_pass(user_id: int, site: str):
         if c.fetchone() == None: return 'There isnt such dir.'
         c.execute(f"SELECT * FROM {user_id} WHERE site_name='{site}'")
         coun = len(c.fetchall())
-        if coun > 1: return 'Error : Unknow Error form database. '
-        elif coun == 0: return 'Error : No such site name. '
+        if coun > 1: return 'Error : 未知的資料庫錯誤 '
+        elif coun == 0: return 'Error : 找不到這個網站名稱 '
         c.execute(f"DELETE FROM {user_id} WHERE site_name='{site}'")
-        return "Done deleting"
+        return "完成刪除資料"
 
 
 def read_pass(user_id: int, site: str):
@@ -53,6 +55,10 @@ def read_pass(user_id: int, site: str):
         else:
             c.execute(f"SELECT name FROM sqlite_master WHERE type='table'")
             if c.fetchone() == None:
-                return 'Error : You dont have any pass stored.'
+                return 'Error : 你沒有任何儲存的密碼'
             c.execute(f"SELECT * FROM {user_id} WHERE site_name='{site}'")
-            return c.fetchone()[1]
+            d = c.fetchone()
+            if d != None :
+                return d[1]
+            else :
+                return None

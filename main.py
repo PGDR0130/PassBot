@@ -1,7 +1,13 @@
+#一個可以儲存密碼的Discord bot --> Passbot
+#109-2 自主學習
+
 import discord
-from setRW import setting_data #read and write data functions
-from keep_alive import keep_alive  #加入讓程式持續運行的網站
+#Json 讀取寫入
+from setRW import setting_data 
+#加入讓程式維持運行的網站
+from keep_alive import keep_alive 
 import edcode
+#sqlite 讀寫
 import sql_handler as sqlh
 import asyncio
 import os
@@ -9,23 +15,24 @@ import os
 client = discord.Client()
 line = '-'*50
 
-in_event = [] #add in the id if user is in
+ #確認使用者是不是在階段內
+in_event = [] 
 pending = {}
 
 async def add_reactions(message, emojis):
     await message.add_reaction(emojis)
 
-def is_number(tex):
-    return tex.content.isnumeric()
+def is_number(text):
+    return text.content.isnumeric()
 
-def end_session(m, mode): #mode0-user end, mode1-Error end
+#階段完成或錯誤的時候，清理資訊的函數
+def end_session(m, mode): #mode0-user_end, mode1-Error_end
     if m.author.id in in_event:
         in_event.pop(in_event.index(m.author.id))
     if mode == 0 :
         for i in pending[f'{m.author.id}']:
             i.close()
         pending[f'{m.author.id}'] = []
-        print(pending)
         return "Ended"
 
     
@@ -34,7 +41,11 @@ def end_session(m, mode): #mode0-user end, mode1-Error end
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+    print(client.is_ws_ratelimited())
+    if client.is_ws_ratelimited() == True :
+        return
     print()
+    
 
 @client.event
 async def on_message(message):
@@ -49,23 +60,22 @@ async def on_message(message):
             return 
         
         def check_session(id):
-            if id in in_event:
-                return True
-            else:
-                return False
+            return True if id in in_event else False
 
         def _check(m):
             return m.channel == channel and m.author.id == author and not m.content.startswith("#end_session")
         
-
-        if message.author == client.user: # 阻擋機器人自己的訊息
+        # 阻擋機器人自己的訊息
+        if message.author == client.user: 
             return 
-
-        if message.author.id in in_event:#阻擋在階段內的使用者
+        
+        #阻擋在階段內的使用者
+        if message.author.id in in_event:
             return        
 
+        #排出私訊訊息，因為私訊不能刪除紀錄
         if message.channel.type == discord.ChannelType.private:
-            await message.channel.send("對不起，不支援私訊") #排出私訊訊息，因為私訊不能刪除紀錄
+            await message.channel.send("對不起，不支援私訊")
             return                         
 
         pending[f'{author}'] = []
@@ -73,7 +83,7 @@ async def on_message(message):
         if message.content.startswith("#help"):
             with open('help_content.txt', 'r') as f:
                 help = f.read()
-                await message.channel.send(help)
+                await message.channel.send(f'```{help}```')
 
         elif message.content.startswith("#passlist"):
             allpass = sqlh.read_pass(author, 'all')
@@ -84,7 +94,8 @@ async def on_message(message):
             await channel.send(line)
             in_event.append(author)
 
-            a = await channel.send("網站名子")#Please enter the name or the url of the site
+            #Please enter the name or the url of the site
+            a = await channel.send("網站名子")
             pending[f'{author}'].append(client.wait_for('message', check=_check))
             site_url = await pending[f'{author}'][0]
             await site_url.delete()
@@ -121,9 +132,7 @@ async def on_message(message):
             in_event.pop(in_event.index(author))
 
 
-
-
-        #find password session 
+        #find password 
         elif message.content.startswith("#findpass"):
             await channel.send(line)
             in_event.append(author)
@@ -149,7 +158,13 @@ async def on_message(message):
 
             await channel.send("完成資料收集")
             await channel.send(line)
-            decoded_pass = edcode.decode(int(master_pass.content), sqlh.read_pass(author,site_url.content))
+            encode = sqlh.read_pass(author,site_url.content)
+            if encode == None :
+                error = await channel.send('找不到這個名子所儲存的密碼')
+                await add_reactions(error, "❌")
+                end_session(message, 1)
+                return 
+            decoded_pass = edcode.decode(int(master_pass.content), encode)
 
 
             
@@ -179,29 +194,26 @@ async def on_message(message):
 
         elif message.content.startswith('#settingChange'):
             in_event.append(author)
-            await channel.send('what option in the setting do you want to change')
+            await channel.send('你想要換哪個選項')
             option = await client.wait_for('message', check=_check)
-            await channel.send('what do you want to change to')
+            await channel.send('你想要換成什麼值')
             content = await client.wait_for('message', check=_check)
             result = setting_data.replace(author, option.content, content.content)
             await channel.send(result)
 
             in_event.pop(in_event.index(author))
-
         else:
-            print(message.channel)
-            print(message)
-            print(channel.type)
-            await message.add_reaction('😀')
-            await message.add_reaction('👋')
+            pass
 
 
     except RuntimeError:
-        pass #Excepted Error ,for canceling the pending message
+        print('session_end')
+    # Excepted Error,for canceling the pending message
     except Exception as e:
         if author in in_event:
-            in_event.pop(in_event.inddex(author))
-        message.channel.send('對不起發生了未知的錯誤')
+            in_event.pop(in_event.index(author))
+        await message.channel.send('!!!對不起發生了未知的錯誤!!!')
+        await message.channel.send(f'`Error : {e}`')
         print(e)
         print('UnException Error')
 
